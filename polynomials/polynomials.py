@@ -57,8 +57,8 @@ class Polynomial:
             coefs = []
             for i in range(self.degree() + other.degree() + 1):
                 initial_use_deg = tuple([] for _ in range(i+1))
-                self_use_deg = initial_use_deg + self.coefficients()[:i+1]
-                other_use_deg = initial_use_deg + other.coefficients()[:i+1]
+                self_use_deg = initial_use_deg + self.coefficients[:i+1]
+                other_use_deg = initial_use_deg + other.coefficients[:i+1]
                 new_coeff = 0
                 for j in range(i+1):
                     new_coeff += self_use_deg[j] * other_use_deg[-j]
