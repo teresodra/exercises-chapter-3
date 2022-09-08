@@ -56,9 +56,12 @@ class Polynomial:
         if isinstance(other, Polynomial):
             coefs = []
             for i in range(self.degree() + other.degree() + 1):
-                initial_use_deg = tuple([] for _ in range(i+1))
-                self_use_deg = initial_use_deg + self.coefficients[:i+1]
-                other_use_deg = initial_use_deg + other.coefficients[:i+1]
+                self_use_deg = self.coefficients[:i+1]
+                while len(self_use_deg) < i+1:
+                    self_use_deg += (0,)
+                other_use_deg = other.coefficients[:i+1]
+                while len(other_use_deg) < i+1:
+                    other_use_deg += (0,)
                 new_coeff = 0
                 for j in range(i+1):
                     new_coeff += self_use_deg[j] * other_use_deg[-j-1]
@@ -90,7 +93,22 @@ class Polynomial:
             return power
         
         else: 
+
             return NotImplemented
 
     def __call__(self, scalar):
-        return sum(scalar * coef ^ i for i, coef in enumerate(self.coefficients))
+        return sum(coef * scalar ** i for i, coef in enumerate(self.coefficients))
+
+    def dx(self):
+        if len(self.coefficients) > 1:
+            return Polynomial(tuple((i + 1) * coef if i > 0 else coef for i, coef in enumerate(self.coefficients[1:])))
+        else:
+            return Polynomial((0,))
+ 
+
+def derivative(poly):
+    if isinstance(poly, Polynomial):
+        return poly.dx()
+
+    else:
+        return NotImplemented
